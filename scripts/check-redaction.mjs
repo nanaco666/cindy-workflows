@@ -8,9 +8,8 @@ function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const file = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (entry.name !== '.git') walk(file);
-    }
-    else if (!/node_modules|__pycache__|\.pyc$/.test(file)) files.push(file);
+      if (!['.git', 'assets'].includes(entry.name)) walk(file);
+    } else if (!/node_modules|__pycache__|\.pyc$/.test(file)) files.push(file);
   }
 }
 walk(root);
@@ -36,4 +35,4 @@ if (violations.length) {
   for (const item of violations) console.error(item);
   process.exit(1);
 }
-console.log(`REDACTION CHECK PASSED (${files.length} files)`);
+console.log(`REDACTION CHECK PASSED (${files.length} text files; binary assets excluded)`);

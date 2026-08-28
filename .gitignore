@@ -1,2 +1,9 @@
 .cindy/
 .DS_Store
+
+# Generated poster previews and local collector cache
+**/__pycache__/
+**/*.pyc
+workflows/cindy-update-poster/content/
+workflows/cindy-update-poster/out/
+workflows/cindy-update-poster/.authors.json

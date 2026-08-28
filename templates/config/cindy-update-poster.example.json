@@ -1,0 +1,13 @@
+{
+  "client_repo": "makecindy/cindy",
+  "server_repo": "xindong/cindy-server",
+  "timezone": "Asia/Shanghai",
+  "chrome": "",
+  "wordmark_sha256": "7ae927c07f7334e337e8f7c9217f8133a8d009032b2f653616528173e4cc9e4b",
+  "schedule": {
+    "name": "Cindy 每日更新海报与文案",
+    "cron": "30 18 * * *",
+    "persistentSession": false,
+    "notify": {"desktop": true, "feishu": true}
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "selection": "sha256(day_id:layout) modulo eligible assets; deterministic for rerenders",
+  "assets": [
+    {
+      "name": "pose-hands-in-pockets",
+      "enabled": true,
+      "layouts": ["columns", "stack", "timeline", "grid"],
+      "tags": ["full-body", "cool", "loafers", "no-cat"]
+    },
+    {
+      "name": "pose-back-looking-back",
+      "enabled": true,
+      "layouts": ["timeline", "grid"],
+      "tags": ["full-body", "back-look", "loafers", "no-cat"]
+    },
+    {
+      "name": "pose-arms-crossed-with-cat",
+      "enabled": true,
+      "layouts": ["stack", "timeline", "grid"],
+      "tags": ["full-body", "cool", "loafers", "with-cat"]
+    },
+    {
+      "name": "pose-hair-back-with-cat",
+      "enabled": true,
+      "layouts": ["stack", "timeline", "grid"],
+      "tags": ["full-body", "dynamic", "loafers", "with-cat"]
+    },
+    {
+      "name": "pose-sitting-with-cat",
+      "enabled": true,
+      "layouts": ["hero"],
+      "tags": ["landscape", "sitting", "loafers", "with-cat"]
+    },
+    {
+      "name": "portrait-game-hero-with-cat",
+      "enabled": true,
+      "layouts": ["hero", "portrait_editorial", "portrait_backdrop"],
+      "tags": ["landscape", "close-up", "with-cat"],
+      "layout_options": {
+        "portrait_backdrop": {
+          "backdrop_compact": true,
+          "backdrop_column_width": 620,
+          "backdrop_cards_y": 430,
+          "backdrop_figure_x_offset": 90,
+          "backdrop_figure_height": 1580,
+          "backdrop_figure_y": 36,
+          "backdrop_fade_top": 1420
+        }
+      }
+    },
+    {
+      "name": "pose-closeup-floating-crystal",
+      "enabled": true,
+      "layouts": ["portrait_editorial", "portrait_backdrop"],
+      "tags": ["portrait", "close-up", "crystal", "no-cat"],
+      "layout_options": {
+        "portrait_backdrop": {
+          "backdrop_compact": true,
+          "backdrop_column_width": 560,
+          "backdrop_cards_y": 430,
+          "backdrop_figure_x_offset": 80,
+          "backdrop_figure_height": 1540,
+          "backdrop_figure_y": 22,
+          "backdrop_fade_top": 1280
+        }
+      }
+    },
+    {
+      "name": "pose-dynamic-halfbody",
+      "enabled": true,
+      "layouts": ["portrait_editorial", "portrait_backdrop"],
+      "tags": ["portrait", "half-body", "dynamic", "no-cat"],
+      "layout_options": {
+        "portrait_backdrop": {
+          "backdrop_compact": true,
+          "backdrop_column_width": 560,
+          "backdrop_cards_y": 430,
+          "backdrop_figure_x_offset": 80,
+          "backdrop_figure_height": 1540,
+          "backdrop_figure_y": 22,
+          "backdrop_fade_top": 1280
+        }
+      }
+    },
+    {
+      "name": "pose-side-profile-rain-sky",
+      "enabled": true,
+      "layouts": ["portrait_editorial", "portrait_backdrop"],
+      "tags": ["portrait", "profile", "rain", "no-cat"],
+      "layout_options": {
+        "portrait_backdrop": {
+          "backdrop_compact": true,
+          "backdrop_column_width": 560,
+          "backdrop_cards_y": 430,
+          "backdrop_figure_x_offset": 80,
+          "backdrop_figure_height": 1540,
+          "backdrop_figure_y": 22,
+          "backdrop_fade_top": 1290,
+          "rain": true,
+          "rain_count": 165,
+          "rain_left": 0.34
+        }
+      }
+    },
+    {
+      "name": "pose-front-rain-droplets",
+      "enabled": true,
+      "layouts": ["portrait_editorial", "portrait_backdrop"],
+      "tags": ["portrait", "front", "rain", "no-cat"],
+      "layout_options": {
+        "portrait_backdrop": {
+          "backdrop_compact": true,
+          "backdrop_column_width": 560,
+          "backdrop_cards_y": 430,
+          "backdrop_figure_x_offset": 150,
+          "backdrop_figure_height": 1750,
+          "backdrop_figure_y": -8,
+          "backdrop_fade_top": 1480,
+          "rain": true,
+          "rain_count": 165,
+          "rain_left": 0.34
+        }
+      }
+    }
+  ]
+}

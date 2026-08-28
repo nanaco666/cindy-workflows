@@ -1,60 +1,109 @@
-# 可移植的反馈自动化工作流
+# Cindy 更新海报工作流
 
-这个目录打包了两条可协作迁移的 Cindy 工作流：
+这个目录提供一个可移植、可脱敏安装的 Cindy 日报工作流：
 
-- `filo-support-replies`：扫描 Gmail（包括 Spam），核验同事回复、产品能力、Issue/PR 和发布状态，在原线程生成标准 Gmail 富文本回复；可在明确授权的策略下自动发送。
-- `filoai-feedback-triage`：扫描 Gmail 与 Feishu，先自行诊断短反馈，再查代码、Issue、PR 和发布记录，创建或补充证据充分的 Issue。
-
-包内的 Skill、脚本和示例配置均为脱敏模板。不会包含真实账号、OAuth、token、cookie、邮件正文、飞书群 ID、任务 ID、审计 JSONL 或 SQLite 数据库。
+- `skills/cindy-update-poster/`：完整依赖 Skill，包含事实口径、编辑规则、HTML/CSS 视觉契约和验收规则；
+- `workflows/cindy-update-poster/`：采集脚本、内容编辑入口、HTML/CSS 生成器、Chrome 截图器和随包品牌/人物资源；
+- `templates/config/cindy-update-poster.example.json`：可复制的本地配置；
+- `templates/schedules/cindy-update-poster.txt`：可直接粘贴到 Cindy Scheduler 的定时任务 prompt；
+- `scripts/check-redaction.mjs`：脱敏检查；
+- `scripts/check-package.mjs`：资源、脚本和安装内容检查；
+- `install.mjs`：交互式 / 非交互式一键安装器。
 
 ## 一键安装
 
-在仓库根目录执行：
+在 Cindy 工作目录执行：
 
 ```bash
-node install.mjs
+git clone https://github.com/nanaco666/cindy-workflows.git
+cd cindy-workflows
+node install.mjs --workflow cindy-update-poster
 ```
 
 安装器会：
 
-1. 将两个 Skill 安装到目标项目的 `.agents/skills/`；
-2. 将脱敏配置复制到 `.cindy/filo-support-automation/`（已存在文件不会覆盖）；
-3. 准备本地审计、状态和 SQLite 路径（首次运行时才写入运行数据）；
-4. 运行两份配置校验和脱敏检查；
-5. 写入定时任务的短 prompt 模板，并输出下一步需要在 Cindy Scheduler 中完成的连接器检查。
+1. 把 Skill 安装到目标项目的 `.agents/skills/cindy-update-poster/`；
+2. 把独立工作流脚本和随包资源复制到目标项目的 `.cindy/workflows/cindy-update-poster/`；
+3. 生成本机配置模板，不覆盖已有配置；
+4. 将目标项目 `.cindy/` 加入 `.gitignore`（仅 Git 仓库）；
+5. 运行脱敏、资源和 Python 语法校验；
+6. 输出 Scheduler 配置步骤。
 
-默认模式是 `SHADOW` / `draft`。SHADOW 不写 GitHub，draft 不发送邮件。只有完成两轮手工验证并由操作者明确切换，才可改为 LIVE 或 `guarded-auto`。
-
-指定其他项目目录：
+指定目标项目：
 
 ```bash
-node install.mjs --target /path/to/project
+node install.mjs --workflow cindy-update-poster --target /path/to/project
 ```
 
-自动化环境可使用 `--non-interactive`，此时必须通过环境变量提供所有必填值；缺失值会直接失败，不会猜测身份或来源。
+自动化安装：
 
-## 连接器与定时任务
+```bash
+node install.mjs --workflow cindy-update-poster --target /path/to/project --non-interactive
+```
 
-安装器不会伪造或写入 Gmail、Feishu、GitHub 凭证，也不会直接修改 Scheduler。请在 Cindy 中分别连接 Gmail、XD Feishu 和 GitHub，然后用 `templates/schedules/` 下的短 prompt 创建两个任务：
+非交互模式只使用环境变量和安全默认值；未提供必要身份信息时直接失败，不猜测仓库或账号。
 
-- `support-replies.txt`
-- `feedback-triage.txt`
+## 首次配置
 
-创建时使用独立任务、对应工作目录、桌面通知、空闲静默；先暂停新任务，运行两轮 SHADOW，再由维护者确认是否进入 LIVE。不要把配置文件、状态目录或日志提交到仓库。
+安装器会创建：
 
-如果需要安装前置检查，将 `skills/filoai-feedback-triage/scripts/preflight.mjs` 的完整内容交给 Cindy Scheduler 的 `schedule_set_pre_run_hook`；不要在 prompt 里硬编码本机路径，也不要手工伪造 hook 命令。反馈开单任务保存状态后，再调用 `sync-intake-db.mjs` 更新 SQLite 查询索引。邮件任务在创建/更新 Gmail 草稿后，必须重新读取 MIME 并通过 `reply_workflow_gate.py finalize`，只有策略允许的全新草稿才可进入自动发送。
+```text
+.cindy/workflows/cindy-update-poster/config.local.json
+```
 
-## 本地文件边界
+其中只放本机运行参数，不放 Token、Cookie、OAuth、API key 或 Scheduler ID。GitHub CLI 登录由使用者
+在 Cindy / 本机环境自行完成；工作流只调用 `gh`，不会收集或保存凭证。
 
-运行时文件只放在目标项目的 `.cindy/filo-support-automation/` 或 Cindy userData；`.cindy/` 已被仓库忽略。SQLite 只是高效查询索引，JSONL/CAS 状态才是各工作流的事实记录。日志只保留时间、来源、摘要指纹、Issue/PR ID、状态和连接器返回的消息 ID，不保存正文。
+可选环境变量：
 
-## 校验
+- `CINDY_POSTER_CLIENT_REPO`：默认 `makecindy/cindy`；
+- `CINDY_POSTER_SERVER_REPO`：默认 `xindong/cindy-server`；
+- `CINDY_POSTER_TIMEZONE`：默认 `Asia/Shanghai`；
+- `CINDY_POSTER_CHROME`：本机 Chrome 可执行文件路径；不设置时使用 macOS 默认路径；
+- `CINDY_POSTER_WORDMARK_SHA256`：固定官方字标校验值，安装器会拒绝修改。
+
+## Scheduler
+
+安装器不会创建或修改定时任务，避免重复任务和错误绑定。安装后在 Cindy Scheduler 创建一条新的
+recurring agent schedule：
+
+- 名称：`Cindy 每日更新海报与文案`；
+- cron：`30 18 * * *`；
+- timezone：`Asia/Shanghai`；
+- 独立会话：开启；
+- working directory：当前 Cindy 工作目录；
+- prompt：复制 `templates/schedules/cindy-update-poster.txt`；
+- 默认通知：desktop + Feishu；
+- 不调用 GPT ImageGen。
+
+如果已有同名任务，应先检查并更新它，不要创建第二条。定时任务必须先采集正式 Release：当天没有正式
+Release 时只汇报无真实发版并结束；Beta、canary、prerelease、draft 和当天 merged PR 都不能替代正式发版。
+
+## 默认输出
+
+每次正式 Release 运行后，输出：
+
+```text
+.cindy/workflows/cindy-update-poster/content/<day_id>.json
+.cindy/workflows/cindy-update-poster/out/html/<day_id>-cn.html
+.cindy/workflows/cindy-update-poster/out/html/<day_id>-en.html
+.cindy/workflows/cindy-update-poster/out/posters/cindy-daily-<day_id>-html-cn.png
+.cindy/workflows/cindy-update-poster/out/posters/cindy-daily-<day_id>-html-en.png
+```
+
+HTML 海报是固定品牌网页结构：全幅 Cindy / 游戏 key-art 背景、约 40–50% 黑色透明层、参考海报位置的
+长条文字模块，以及可复用的头部/底部品牌装饰。Chrome headless 截图固定为 `1240 × 1754`。
+
+工作流只生成并落盘内容，不自动发社区、不发消息、不创建邮件草稿、不提交 PR。
+
+## 本地检查
 
 ```bash
 node scripts/check-redaction.mjs
-node scripts/check-template-sync.mjs
-python3 skills/filo-support-replies/scripts/validate_policy.py .cindy/filo-support-automation/support-policy.local.json
-node skills/filoai-feedback-triage/scripts/validate-config.mjs .cindy/filo-support-automation/feedback-triage.local.json
+node scripts/check-package.mjs
+node install.mjs --workflow cindy-update-poster --target /tmp/cindy-poster-test --non-interactive
 ```
 
-两份 Skill 的测试位于各自 `tests/`；不需要连接真实服务即可运行纯逻辑测试。
+## License
+
+MIT，工作流资源的第三方/品牌使用仍以其各自授权为准。
