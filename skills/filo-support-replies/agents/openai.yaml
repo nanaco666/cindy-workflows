@@ -1,0 +1,4 @@
+interface:
+  display_name: "Filo 用户邮件回复"
+  short_description: "核验产品与 Issue/PR，复核并原位更新可审计邮件草稿"
+  default_prompt: "使用 $filo-support-replies 先核验产品能力和 Issue/PR，再复核已有草稿并在原线程生成或原位更新可审计回复。"

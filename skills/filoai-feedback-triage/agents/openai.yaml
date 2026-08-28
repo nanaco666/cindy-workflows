@@ -1,0 +1,4 @@
+interface:
+  display_name: "FiloAI Feedback Triage"
+  short_description: "Diagnose Gmail + Feishu feedback before filing Issues"
+  default_prompt: "Use $filoai-feedback-triage to install or audit the FiloAI feedback-to-Issue automation."

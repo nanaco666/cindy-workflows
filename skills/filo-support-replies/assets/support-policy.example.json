@@ -1,0 +1,151 @@
+{
+  "schema_version": 3,
+  "product": "YOUR_PRODUCT_NAME",
+  "reply_mode": "draft",
+  "policy_review": {
+    "reviewed_at": "2026-08-13",
+    "reviewed_by": "REPLACE_WITH_APPROVER",
+    "source_of_truth": "REPLACE_WITH_INTERNAL_POLICY_PATH_OR_URL",
+    "stale_after_days": 14
+  },
+  "sender": {
+    "team_name": "Filo Support",
+    "individual_name": "",
+    "default_language": "match_sender",
+    "mailbox_account": "REPLACE_WITH_CONNECTED_GMAIL_ACCOUNT",
+    "from_address": "REPLACE_WITH_AUTHORIZED_SEND_AS_ALIAS",
+    "cc_addresses": [
+      "REPLACE_WITH_REQUIRED_CC_ADDRESS"
+    ]
+  },
+  "threading": {
+    "staff_domains": [
+      "REPLACE_WITH_STAFF_DOMAIN"
+    ],
+    "draft_mode": "threaded_reply",
+    "require_reply_message_id": true,
+    "include_spam_candidates": true,
+    "require_visible_quoted_original": true,
+    "require_post_save_body_check": true,
+    "skip_if_existing_draft": true,
+    "require_existing_draft_review": true,
+    "allow_existing_draft_update": true,
+    "require_repository_search_evidence": true,
+    "drop_invalid_drafts": true,
+    "allow_verified_google_groups_delivery_as_canonical": true,
+    "require_google_groups_reply_to_original_match": true,
+    "review_required_create_draft_when_reply_target_verified": true
+  },
+  "bug_tracking": {
+    "enabled": true,
+    "canonical_repo": "OWNER/FRONTEND_REPO",
+    "related_repos": [],
+    "repository_routes": {
+      "frontend": {
+        "directory": "frontend",
+        "repository": "REPLACE_WITH_FRONTEND_OWNER_AND_REPOSITORY"
+      },
+      "server": {
+        "directory": "server",
+        "repository": "REPLACE_WITH_SERVER_OWNER_AND_REPOSITORY"
+      }
+    },
+    "include_repository_links_in_customer_reply": false,
+    "github_writes": {
+      "create_issue": true,
+      "comment_existing_issue": true,
+      "update_issue_labels": true,
+      "close_or_reopen_issue": false,
+      "modify_pull_request": false
+    },
+    "allowed_issue_labels": {
+      "types": [
+        "类型：Bug"
+      ],
+      "clients": []
+    }
+  },
+  "feature_tracking": {
+    "enabled": true,
+    "repository_route": "frontend",
+    "require_capability_check_before_issue": true,
+    "existing_capability_action": "reply_with_instructions",
+    "unverified_capability_action": "review_required",
+    "create_missing_issue": true,
+    "reuse_matching_issue": true,
+    "route_to_product_review": true,
+    "product_review_label": "needs-human-review",
+    "required_labels": [
+      "类型：新需求",
+      "客户端：Desktop",
+      "triage:feature",
+      "status:needs-product-scope",
+      "needs-human-review"
+    ]
+  },
+  "follow_up": {
+    "enabled": true,
+    "check_interval_hours": 24,
+    "eligible_categories": [
+      "bug_or_reliability",
+      "feature_request"
+    ],
+    "pending_statuses": [
+      "recorded",
+      "being_handled",
+      "merged_waiting_release"
+    ],
+    "require_verified_release_version": true,
+    "allow_latest_staff_sender_exception_for_resolution_follow_up": true,
+    "deduplicate_release_notifications": true,
+    "draft_only": true
+  },
+  "current_policy": {
+    "free_ai_transition": {
+      "approved": true,
+      "effective_date": "2026-08-14",
+      "facts_to_reverify_before_live_use": [
+        "Filo Free continues to provide core email reading, sending, organizing, and management.",
+        "Features that require AI processing move to Filo Plus on the effective date.",
+        "Filo Plus includes a defined amount of AI usage rather than unlimited usage."
+      ],
+      "not_offered_unless_a_new_policy_approves_it": [
+        "Private free-credit grants",
+        "Grandfathered free AI access",
+        "Referral-code extensions",
+        "One-off additional usage purchases"
+      ]
+    }
+  },
+  "automation": {
+    "auto_send_categories": [],
+    "always_review_categories": [
+      "billing_or_refund",
+      "account_access_or_deletion",
+      "privacy_or_security",
+      "legal_or_regulatory",
+      "press_or_public_incident",
+      "compensation_or_exception",
+      "credible_threat_or_self_harm",
+      "ambiguous_policy",
+      "product_plan_or_new_feature",
+      "feature_request",
+      "pricing_or_paid_operation"
+    ],
+    "no_reply_categories": [
+      "partnership_or_special_terms"
+    ],
+    "approved_by": "",
+    "approved_at": "",
+    "audit_log_path": "REPLACE_WITH_ABSOLUTE_AUDIT_JSONL_PATH",
+    "intake_database_path": "REPLACE_WITH_ABSOLUTE_INTAKE_SQLITE_PATH",
+    "audit_schema_version": 3,
+    "require_fingerprints": true
+  },
+  "escalation_owners": {
+    "billing": "",
+    "account": "",
+    "privacy_security": "",
+    "product": ""
+  }
+}

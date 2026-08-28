@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "mode": "SHADOW",
+  "schedule": {
+    "name": "Product · Gmail+Feishu feedback triage",
+    "cronExpr": "0 * * * *",
+    "timezone": "Asia/Singapore",
+    "agentKind": "codex",
+    "model": "REPLACE_WITH_AVAILABLE_MODEL",
+    "providerId": "REPLACE_WITH_PROVIDER_ID",
+    "effort": "high",
+    "silentWhenIdle": true,
+    "notify": {
+      "desktop": true,
+      "feishu": false
+    }
+  },
+  "sources": {
+    "gmail": {
+      "account": "REPLACE_WITH_AUTHORIZED_ACCOUNT",
+      "initialWatermarkTime": "REPLACE_WITH_ISO_8601_CUTOVER_TIME",
+      "overlapMinutes": 10,
+      "maxDeepCandidatesPerRun": 20
+    },
+    "feishu": {
+      "chatName": "REPLACE_WITH_FEISHU_CHAT_NAME",
+      "chatId": "REPLACE_WITH_FEISHU_CHAT_ID",
+      "initialWatermarkPosition": "REPLACE_WITH_CURRENT_POSITION",
+      "initialWatermarkMessageId": "REPLACE_WITH_CURRENT_MESSAGE_ID",
+      "initialWatermarkTime": "REPLACE_WITH_ISO_8601_TIME"
+    }
+  },
+  "github": {
+    "canonicalRepo": "OWNER/FRONTEND_REPO",
+    "relatedRepos": [
+      "OWNER/SERVER_REPO",
+      "OWNER/AGENT_REPO",
+      "OWNER/ADMIN_REPO",
+      "OWNER/DOC_REPO"
+    ],
+    "branchPolicy": "remote-default",
+    "allowedIssueLabels": {
+      "types": ["类型：Bug", "类型：新需求"],
+      "clients": ["客户端：全端", "客户端：Desktop", "客户端：iOS", "客户端：Android"],
+      "optional": ["服务端：涉及"]
+    }
+  },
+  "state": {
+    "shadowFile": "~/.cindy/schedule-state/filoai-feedback-triage-v2-shadow.json",
+    "liveFile": "~/.cindy/schedule-state/filoai-feedback-triage-v2.json",
+    "maxRememberedIds": 5000,
+    "maxRememberedFingerprints": 2000
+  },
+  "insights": {
+    "databasePath": "~/.cindy/insights/filo-intake.sqlite"
+  },
+  "limits": {
+    "maxRunMinutes": 15,
+    "maxExternalReads": 60,
+    "maxGithubWrites": 10
+  }
+}

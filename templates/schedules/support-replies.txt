@@ -1,0 +1,1 @@
+使用 $filo-support-replies 执行一次 scheduled run。读取工作目录中的 .cindy/filo-support-automation/support-policy.local.json，严格按其中 reply_mode 执行；检查 Inbox 和 Spam、同事回复、现有草稿、产品能力、Issue/PR、发布版本和语言书体，使用 Gmail connector 在原线程创建或原位更新标准 MIME 草稿。仅当本地策略明确允许时自动发送；禁止发送合作/媒体/赞助等 no-reply 类别。运行失败时 fail-closed，并以「🙋‍♀️需要回复」或「☑️无需处理」二选一开头汇报。

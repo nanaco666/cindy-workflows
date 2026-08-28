@@ -1,0 +1,1 @@
+使用 $filoai-feedback-triage 执行一次 scheduled run。读取工作目录中的 .cindy/filo-support-automation/feedback-triage.local.json，严格按其中 mode 执行；扫描 Gmail 和 Feishu，先自行诊断并核对当前产品、代码、Issue、PR、发布记录，再创建或补充证据充分的 Issue。SHADOW 禁止 GitHub 写入，LIVE 仅允许配置的 Issue 写入；不发送消息、不改代码、不创建 PR。运行失败时 fail-closed，并以「🙋‍♀️需要回复」或「☑️无需处理」二选一开头汇报。
