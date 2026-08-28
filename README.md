@@ -1,14 +1,11 @@
-# Cindy 更新海报工作流
+# 可移植的 Cindy 工作流
 
-这个目录提供一个可移植、可脱敏安装的 Cindy 日报工作流：
+这个仓库提供可脱敏安装的 Cindy 工作流：
 
-- `skills/cindy-update-poster/`：完整依赖 Skill，包含事实口径、编辑规则、HTML/CSS 视觉契约和验收规则；
-- `workflows/cindy-update-poster/`：采集脚本、内容编辑入口、HTML/CSS 生成器、Chrome 截图器和随包品牌/人物资源；
-- `templates/config/cindy-update-poster.example.json`：可复制的本地配置；
-- `templates/schedules/cindy-update-poster.txt`：可直接粘贴到 Cindy Scheduler 的定时任务 prompt；
-- `scripts/check-redaction.mjs`：脱敏检查；
-- `scripts/check-package.mjs`：资源、脚本和安装内容检查；
-- `install.mjs`：交互式 / 非交互式一键安装器。
+- `cindy-update-poster`：生成 Cindy 日报海报与中英文文案。
+- `xiaohongshu-feedback-monitor`：通过用户真实 Chrome Profile 的只读浏览器连接，采集多账号评论、私信和群聊，生成增量反馈报告。
+
+包内 Skill、脚本和示例配置均为脱敏模板，不包含真实账号、Cookie、Token、报告、Scheduler ID 或机器状态。
 
 ## 一键安装
 
@@ -17,93 +14,60 @@
 ```bash
 git clone https://github.com/nanaco666/cindy-workflows.git
 cd cindy-workflows
-node install.mjs --workflow cindy-update-poster
+node install.mjs --workflow cindy-update-poster --target /path/to/project
+```
+
+安装器不会创建或修改线上 Scheduler，也不会写入凭证；它只复制 Skill、工作流脚本、本地配置模板并执行包校验。
+
+只安装小红书巡检：
+
+```bash
+node install.mjs --workflow xiaohongshu --target /path/to/project --non-interactive
 ```
 
 安装器会：
 
-1. 把 Skill 安装到目标项目的 `.agents/skills/cindy-update-poster/`；
-2. 把独立工作流脚本和随包资源复制到目标项目的 `.cindy/workflows/cindy-update-poster/`；
-3. 生成本机配置模板，不覆盖已有配置；
-4. 将目标项目 `.cindy/` 加入 `.gitignore`（仅 Git 仓库）；
-5. 运行脱敏、资源和 Python 语法校验；
-6. 输出 Scheduler 配置步骤。
+1. 将 Skill 安装到目标项目的 `.agents/skills/`；
+2. 创建 `.cindy/workflows/xiaohongshu-feedback-monitor/`；
+3. 初始化三个禁用的账号槽位、增量状态和报告目录；
+4. 写入定时任务 prompt、YAML spec 和本地 preflight 模板；
+5. 运行脱敏检查和模板同步检查。
 
-指定目标项目：
+然后在 Cindy 中连接浏览器 MCP，使用独立 Chrome Profile 手工登录每个账号，再按 Skill 的 `set-account` 命令完成映射。登录态只保存在用户自己的 Chrome Profile 中。
+
+## 小红书定时任务
+
+安装器不会自动创建 Scheduler 记录。使用以下文件创建一条暂停的 recurring agent schedule：
+
+- `templates/schedules/xiaohongshu-feedback-monitor.txt`
+- `templates/schedules/xiaohongshu-feedback-monitor.yaml`
+
+默认建议每天 `10:00`、时区 `Asia/Shanghai`，空闲静默、异常或有新反馈时通知。需要前置检查时，把安装后的 `preflight.py` 内容交给 Cindy Scheduler 的 `schedule_set_pre_run_hook`，不要手工修改 Scheduler 数据库。
+
+小红书工作流的边界：
+
+- 评论、私信和群聊采集：依赖 Cindy 浏览器 MCP / Chrome DevTools 附着。
+- 登录态：由真实 Chrome Profile 持有，不由 MCP 保存。
+- 时间解析、去重、增量状态和报告：由本地 Python 脚本完成，不依赖 MCP。
+- 默认只读：不回复、点赞、删除、标记已处理、发布或修改账号设置。
+
+## Cindy 日报海报
 
 ```bash
 node install.mjs --workflow cindy-update-poster --target /path/to/project
 ```
 
-自动化安装：
+默认配置和定时任务模板见 `templates/config/cindy-update-poster.example.json` 与 `templates/schedules/cindy-update-poster.txt`。
 
-```bash
-node install.mjs --workflow cindy-update-poster --target /path/to/project --non-interactive
-```
-
-非交互模式只使用环境变量和安全默认值；未提供必要身份信息时直接失败，不猜测仓库或账号。
-
-## 首次配置
-
-安装器会创建：
-
-```text
-.cindy/workflows/cindy-update-poster/config.local.json
-```
-
-其中只放本机运行参数，不放 Token、Cookie、OAuth、API key 或 Scheduler ID。GitHub CLI 登录由使用者
-在 Cindy / 本机环境自行完成；工作流只调用 `gh`，不会收集或保存凭证。
-
-可选环境变量：
-
-- `CINDY_POSTER_CLIENT_REPO`：默认 `makecindy/cindy`；
-- `CINDY_POSTER_SERVER_REPO`：默认 `xindong/cindy-server`；
-- `CINDY_POSTER_TIMEZONE`：默认 `Asia/Shanghai`；
-- `CINDY_POSTER_CHROME`：本机 Chrome 可执行文件路径；不设置时使用 macOS 默认路径；
-- `CINDY_POSTER_WORDMARK_SHA256`：固定官方字标校验值，安装器会拒绝修改。
-
-## Scheduler
-
-安装器不会创建或修改定时任务，避免重复任务和错误绑定。安装后在 Cindy Scheduler 创建一条新的
-recurring agent schedule：
-
-- 名称：`Cindy 每日更新海报与文案`；
-- cron：`30 18 * * *`；
-- timezone：`Asia/Shanghai`；
-- 独立会话：开启；
-- working directory：当前 Cindy 工作目录；
-- prompt：复制 `templates/schedules/cindy-update-poster.txt`；
-- 默认通知：desktop + Feishu；
-- 不调用 GPT ImageGen。
-
-如果已有同名任务，应先检查并更新它，不要创建第二条。定时任务必须先采集正式 Release：当天没有正式
-Release 时只汇报无真实发版并结束；Beta、canary、prerelease、draft 和当天 merged PR 都不能替代正式发版。
-
-## 默认输出
-
-每次正式 Release 运行后，输出：
-
-```text
-.cindy/workflows/cindy-update-poster/content/<day_id>.json
-.cindy/workflows/cindy-update-poster/out/html/<day_id>-cn.html
-.cindy/workflows/cindy-update-poster/out/html/<day_id>-en.html
-.cindy/workflows/cindy-update-poster/out/posters/cindy-daily-<day_id>-html-cn.png
-.cindy/workflows/cindy-update-poster/out/posters/cindy-daily-<day_id>-html-en.png
-```
-
-HTML 海报是固定品牌网页结构：全幅 Cindy / 游戏 key-art 背景、约 40–50% 黑色透明层、参考海报位置的
-长条文字模块，以及可复用的头部/底部品牌装饰。Chrome headless 截图固定为 `1240 × 1754`。
-
-工作流只生成并落盘内容，不自动发社区、不发消息、不创建邮件草稿、不提交 PR。
-
-## 本地检查
+## 校验
 
 ```bash
 node scripts/check-redaction.mjs
+node scripts/check-template-sync.mjs
 node scripts/check-package.mjs
-node install.mjs --workflow cindy-update-poster --target /tmp/cindy-poster-test --non-interactive
+python3 '/path/to/skill-creator/scripts/quick_validate.py' skills/xiaohongshu-feedback-monitor
 ```
 
 ## License
 
-MIT，工作流资源的第三方/品牌使用仍以其各自授权为准。
+MIT；随包品牌和第三方资源仍以其各自授权为准。

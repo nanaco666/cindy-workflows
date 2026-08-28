@@ -12,6 +12,10 @@ const pairs = [
     path.join(root, 'templates', 'config', 'feedback-triage.example.json'),
     path.join(root, 'skills', 'filoai-feedback-triage', 'assets', 'config.example.json'),
   ],
+  [
+    path.join(root, 'templates', 'config', 'xiaohongshu-feedback.example.json'),
+    path.join(root, 'skills', 'xiaohongshu-feedback-monitor', 'assets', 'config.example.json'),
+  ],
 ];
 for (const [left, right] of pairs) {
   const a = JSON.stringify(JSON.parse(fs.readFileSync(left, 'utf8')));

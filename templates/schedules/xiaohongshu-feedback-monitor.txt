@@ -1,0 +1,1 @@
+使用 $xiaohongshu-feedback-monitor 执行一次只读 scheduled run。读取工作目录中的 .cindy/xiaohongshu-feedback-monitor/config.local.json 和 accounts.json，按配置检查所有已映射的真实 Chrome Profile，采集最近窗口内的评论、私信和群聊，按 Skill 规则标准化、去重、增量分类并生成 Markdown 报告。禁止回复、点赞、删除、标记已处理、发布、修改账号设置或尝试登录/CAPTCHA；如果某个 Profile 未登录或遇到风控，只阻塞该账号并继续其他账号，fail-closed 汇报。
