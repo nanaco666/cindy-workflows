@@ -6,7 +6,15 @@ import crypto from 'node:crypto';
 const root = path.resolve(import.meta.dirname, '..');
 const required = [
   'README.md',
+  'install.mjs',
+  'skills/filo-support-replies/SKILL.md',
+  'skills/filo-support-replies/assets/support-policy.example.json',
+  'skills/filo-support-replies/scripts/validate_policy.py',
+  'skills/filoai-feedback-triage/SKILL.md',
+  'skills/filoai-feedback-triage/assets/config.example.json',
+  'skills/filoai-feedback-triage/scripts/validate-config.mjs',
   'skills/cindy-update-poster/SKILL.md',
+  'skills/xiaohongshu-feedback-monitor/SKILL.md',
   'workflows/cindy-update-poster/README.md',
   'workflows/cindy-update-poster/collect.py',
   'workflows/cindy-update-poster/poster.py',
@@ -18,6 +26,13 @@ const required = [
   'workflows/cindy-update-poster/assets/brand/BebasNeue-Regular.ttf',
   'templates/config/cindy-update-poster.example.json',
   'templates/schedules/cindy-update-poster.txt',
+  'templates/config/support-policy.example.json',
+  'templates/config/feedback-triage.example.json',
+  'templates/config/xiaohongshu-feedback.example.json',
+  'templates/schedules/support-replies.txt',
+  'templates/schedules/feedback-triage.txt',
+  'templates/schedules/xiaohongshu-feedback-monitor.txt',
+  'templates/schedules/xiaohongshu-feedback-monitor.yaml',
 ];
 const missing = required.filter(file => !fs.existsSync(path.join(root, file)));
 if (missing.length) {
