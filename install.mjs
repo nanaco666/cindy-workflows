@@ -10,11 +10,15 @@ const packageRoot = path.resolve(import.meta.dirname);
 const args = process.argv.slice(2);
 const targetArg = args[args.indexOf('--target') + 1];
 const target = path.resolve(targetArg || process.cwd());
+const workflow = args[args.indexOf('--workflow') + 1] || 'all';
 const nonInteractive = args.includes('--non-interactive');
 const rl = nonInteractive ? null : readline.createInterface({ input: process.stdin, output: process.stdout });
 const supportTemplate = path.join(packageRoot, 'templates', 'config', 'support-policy.example.json');
 const triageTemplate = path.join(packageRoot, 'templates', 'config', 'feedback-triage.example.json');
 const localRoot = path.join(target, '.cindy', 'filo-support-automation');
+const xhsTemplate = path.join(packageRoot, 'templates', 'config', 'xiaohongshu-feedback.example.json');
+const xhsSkill = path.join(packageRoot, 'skills', 'xiaohongshu-feedback-monitor');
+const xhsLocalRoot = path.join(target, '.cindy', 'xiaohongshu-feedback-monitor');
 
 function fail(message) { console.error(`安装失败：${message}`); process.exit(1); }
 function readJson(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
@@ -30,12 +34,10 @@ async function ask(label, envName, fallback = '') {
   return input || value || fallback;
 }
 function requireValue(value, label) { if (!value || value.startsWith('REPLACE_WITH_')) fail(`${label} 未配置`); return value; }
-function protectLocalData() {
+function protectLocalData(rootPath, marker, entry) {
   const gitMarker = path.join(target, '.git');
   if (!fs.existsSync(gitMarker)) return;
   const ignoreFile = path.join(target, '.gitignore');
-  const marker = '# Cindy Filo support automation local data';
-  const entry = '.cindy/filo-support-automation/';
   const current = fs.existsSync(ignoreFile) ? fs.readFileSync(ignoreFile, 'utf8') : '';
   if (current.includes(entry)) return;
   const suffix = current.endsWith('\n') || current === '' ? '' : '\n';
@@ -51,7 +53,40 @@ function copyTree(source, destination) {
   }
 }
 if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) fail(`目标目录不存在：${target}`);
-protectLocalData();
+
+async function installXiaohongshu() {
+  protectLocalData(xhsLocalRoot, '# Cindy Xiaohongshu feedback monitor local data', '.cindy/xiaohongshu-feedback-monitor/');
+  const config = readJson(xhsTemplate);
+  config.browser.chromeLocalState = process.platform === 'darwin'
+    ? path.join(os.homedir(), 'Library/Application Support/Google/Chrome/Local State')
+    : 'REPLACE_WITH_LOCAL_CHROME_STATE_PATH';
+  writeNew(path.join(xhsLocalRoot, 'config.local.json'), config);
+  writeNew(path.join(xhsLocalRoot, 'README.local.txt'), '本目录包含本机账号映射、增量状态和报告。不要提交或分享。\n');
+  copyTree(xhsSkill, path.join(target, '.agents', 'skills', 'xiaohongshu-feedback-monitor'));
+  const manage = path.join(target, '.agents', 'skills', 'xiaohongshu-feedback-monitor', 'scripts', 'manage_config.py');
+  execFileSync('python3', [manage, 'init', '--runtime', xhsLocalRoot, '--slots', String(config.accountSlots), '--disabled'], { stdio: 'inherit' });
+  const prompt = path.join(packageRoot, 'templates', 'schedules', 'xiaohongshu-feedback-monitor.txt');
+  const spec = path.join(packageRoot, 'templates', 'schedules', 'xiaohongshu-feedback-monitor.yaml');
+  const hook = path.join(packageRoot, 'skills', 'xiaohongshu-feedback-monitor', 'scripts', 'preflight.py');
+  fs.copyFileSync(prompt, path.join(xhsLocalRoot, 'schedule-prompt.txt'));
+  fs.copyFileSync(spec, path.join(xhsLocalRoot, 'schedule-spec.yaml'));
+  fs.copyFileSync(hook, path.join(xhsLocalRoot, 'preflight.py'));
+  fs.chmodSync(path.join(xhsLocalRoot, 'preflight.py'), 0o755);
+  execFileSync(process.execPath, [path.join(packageRoot, 'scripts', 'check-redaction.mjs')], { stdio: 'inherit' });
+  execFileSync(process.execPath, [path.join(packageRoot, 'scripts', 'check-template-sync.mjs')], { stdio: 'inherit' });
+  console.log(`小红书工作流安装完成：${target}`);
+  console.log(`本地配置：${path.join(xhsLocalRoot, 'accounts.json')}`);
+  console.log('下一步：在 Cindy 中连接浏览器 MCP，使用独立 Chrome Profile 登录账号，再按 schedule-prompt.txt 创建一个暂停的定时任务。');
+}
+
+if (!['all', 'xiaohongshu'].includes(workflow)) fail(`不支持的工作流：${workflow}`);
+if (workflow === 'xiaohongshu') {
+  await installXiaohongshu();
+  rl?.close();
+  process.exit(0);
+}
+
+protectLocalData(localRoot, '# Cindy Filo support automation local data', '.cindy/filo-support-automation/');
 
 const support = readJson(supportTemplate);
 support.product = await ask('产品名称', 'CINDY_SUPPORT_PRODUCT', 'Filo');

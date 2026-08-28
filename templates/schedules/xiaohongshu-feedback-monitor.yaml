@@ -1,0 +1,16 @@
+name: xiaohongshu-feedback-monitor
+purpose: Read-only collection and incremental summarization of Xiaohongshu comments, private messages, and group messages.
+kind: routine
+cadence: "0 10 * * *"
+timezone: Asia/Shanghai
+execution: agent
+model: receiver-selected
+silentWhenIdle: true
+notification: state-change-or-failure-only
+preRunHook: receiver-installed-if-needed
+terminalCondition: not-applicable
+ownerPolicy: one-schedule-per-working-directory
+permissions: READ_ONLY
+requiredConnections:
+  - browser MCP with Chrome DevTools attachment
+  - real Chrome profiles with manual Xiaohongshu login

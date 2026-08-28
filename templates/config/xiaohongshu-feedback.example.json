@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "accountSlots": 3,
+  "timezone": "Asia/Shanghai",
+  "mode": "READ_ONLY",
+  "runtime": {
+    "directory": ".cindy/xiaohongshu-feedback-monitor",
+    "accountsFile": "accounts.json",
+    "stateFile": "state.json",
+    "exportsDirectory": "exports"
+  },
+  "collection": {
+    "defaultLookbackHours": 48,
+    "recurringOverlapDays": 1,
+    "sources": ["comments", "private_messages", "group_messages"],
+    "excludeSystemOnlyMessages": true
+  },
+  "browser": {
+    "channel": "stable",
+    "requiresRealChromeProfile": true,
+    "requiresRemoteDebugging": true,
+    "chromeLocalState": "REPLACE_WITH_LOCAL_CHROME_STATE_PATH_OR_DEFAULT"
+  },
+  "schedule": {
+    "name": "Xiaohongshu · feedback monitor",
+    "cronExpr": "0 10 * * *",
+    "timezone": "Asia/Shanghai",
+    "execution": "agent",
+    "silentWhenIdle": true,
+    "notifications": "desktop_on_action_or_failure"
+  },
+  "limits": {
+    "maxAccountsPerRun": 3,
+    "maxMinutes": 15,
+    "maxPagesPerAccount": 3
+  }
+}

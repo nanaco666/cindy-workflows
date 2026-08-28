@@ -1,0 +1,7 @@
+interface:
+  display_name: "小红书反馈巡检"
+  short_description: "多账号读取评论、私信和群聊并生成增量反馈报告"
+  default_prompt: "Use $xiaohongshu-feedback-monitor to inspect recent comments, private messages, and group messages for configured Xiaohongshu accounts."
+
+policy:
+  allow_implicit_invocation: true
