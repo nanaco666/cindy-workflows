@@ -9,6 +9,19 @@
 - `cindy-update-poster`：生成 Cindy 日报海报与中英文文案。
 - `xiaohongshu-feedback-monitor`：通过用户自己的 Chrome Profile 只读采集小红书评论、私信和群聊，生成增量反馈报告。
 
+## Cindy 角色外观资源
+
+`character-bible/` 保存 Cindy 数据人和黑猫宠物的可复用视觉锚点，包括人物/宠物三视图、细节图、独立饰品拆解图、原始参考图和固定提示词。
+
+使用时：
+
+1. 先阅读 [`character-bible/README.md`](character-bible/README.md) 和 [`character-bible/prompts/appearance-lock.md`](character-bible/prompts/appearance-lock.md)。
+2. 生成人物时引用人物三视图、人物耳饰拆解图和服装参考图；Cindy 只有左耳佩戴约 3 cm 的银色 `>` 耳饰，右耳必须裸露。
+3. 生成猫时引用宠物三视图、猫眼近景和项圈/银牌拆解图；猫是短毛黑猫，虹膜上黑下红渐变、黑色竖瞳，红项圈和带“一”字刻痕的银牌。
+4. 角色动作、场景和镜头可以变化，但外观锁定字段不可改。
+
+这套资源只包含静态素材和提示词，不会写入 Gmail、Feishu、GitHub、浏览器凭证或 Scheduler 运行态。
+
 ## 一键安装全部工作流
 
 在目标 Cindy 工作目录执行：

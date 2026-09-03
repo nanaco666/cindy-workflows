@@ -1,0 +1,31 @@
+{
+  "character": "Cindy",
+  "version": "person-v4-left-ear-only_pet-v3-black-red-eyes",
+  "asOf": "2026-09-03",
+  "canonical": {
+    "personTurnaround": "assets/character/cindy-character-turnaround-v4-left-ear-only.png",
+    "personDetails": "assets/character/cindy-character-details-v3-final.png",
+    "personEarringAccessory": "assets/character/cindy-earring-accessory-sheet-v1.png",
+    "petTurnaround": "assets/pet/cindy-pet-turnaround-v3-black-red-eyes.png",
+    "petDetails": "assets/pet/cindy-pet-details-v3-black-red-eyes.png",
+    "petCollarTagAccessory": "assets/pet/cindy-collar-tag-accessory-sheet-v1.png"
+  },
+  "references": [
+    "assets/reference/cindy-original-reference.webp",
+    "assets/reference/cindy-fullbody-costume-reference.webp",
+    "assets/reference/cindy-update-poster-costume-reference.webp",
+    "assets/reference/cindy-ear-accessory-reference.webp",
+    "assets/reference/cindy-cat-eye-reference.png"
+  ],
+  "doNotUse": [
+    "archive/agent-draft-v1/person_turnaround.png",
+    "archive/agent-draft-v1/person_details.png"
+  ],
+  "lockedDetails": {
+    "dress": "pale blue-gray one-piece fit-and-flare dress with gathered waist and layered ruffled hem",
+    "outerwear": "oversized cream rib-knit cardigan with button placket",
+    "shoes": "glossy black low-cut thick-platform leather shoes, loafer/Mary Jane silhouette, no shaft",
+    "earring": "anatomical left ear only; approximately 3 cm; small round silver stud, short fine silver chain, one side-facing > pendant; anatomical right ear bare",
+    "pet": "short-haired black cat, irises black on top blending to crimson red on bottom, black slit pupils, red collar, round silver tag with one horizontal 一 engraving"
+  }
+}
