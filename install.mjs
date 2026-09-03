@@ -32,15 +32,15 @@ const workflowAliases = {
 function fail(message) { console.error(`安装失败：${message}`); process.exit(1); }
 function readJson(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
 function envOr(name, fallback = '') { return process.env[name] || fallback; }
-function copyTree(source, destination) {
+function copyTree(source, destination, overwrite = false) {
   if (!fs.existsSync(source)) fail(`安装包缺少目录：${path.relative(packageRoot, source)}`);
   fs.mkdirSync(destination, { recursive: true });
   for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
     if (['.DS_Store', '__pycache__'].includes(entry.name)) continue;
     const from = path.join(source, entry.name);
     const to = path.join(destination, entry.name);
-    if (entry.isDirectory()) copyTree(from, to);
-    else if (!fs.existsSync(to)) fs.copyFileSync(from, to);
+    if (entry.isDirectory()) copyTree(from, to, overwrite);
+    else if (overwrite || !fs.existsSync(to)) fs.copyFileSync(from, to);
   }
 }
 function writeNew(file, value) {
@@ -71,8 +71,8 @@ function runPackageChecks() {
   execFileSync(process.execPath, [path.join(packageRoot, 'scripts', 'check-redaction.mjs')], { stdio: 'inherit' });
   execFileSync(process.execPath, [path.join(packageRoot, 'scripts', 'check-template-sync.mjs')], { stdio: 'inherit' });
 }
-function installSkill(name) {
-  copyTree(path.join(packageRoot, 'skills', name), path.join(target, '.agents', 'skills', name));
+function installSkill(name, overwrite = false) {
+  copyTree(path.join(packageRoot, 'skills', name), path.join(target, '.agents', 'skills', name), overwrite);
 }
 
 async function installSupport() {
@@ -137,13 +137,14 @@ async function installTriage() {
 function installPoster() {
   const workflow = 'cindy-update-poster';
   const localRoot = path.join(target, '.cindy', 'workflows', workflow);
-  installSkill(workflow);
-  copyTree(path.join(packageRoot, 'workflows', workflow), localRoot);
+  installSkill(workflow, true);
+  copyTree(path.join(packageRoot, 'workflows', workflow), localRoot, true);
   const config = readJson(path.join(packageRoot, 'templates', 'config', `${workflow}.example.json`));
   config.client_repo = envOr('CINDY_POSTER_CLIENT_REPO', config.client_repo);
   config.server_repo = envOr('CINDY_POSTER_SERVER_REPO', config.server_repo);
   config.timezone = envOr('CINDY_POSTER_TIMEZONE', config.timezone);
   config.chrome = envOr('CINDY_POSTER_CHROME', config.chrome);
+  config.background_dir = envOr('CINDY_POSTER_BACKGROUND_DIR', config.background_dir);
   writeNew(path.join(localRoot, 'config.local.json'), config);
   fs.mkdirSync(path.join(localRoot, 'content'), { recursive: true, mode: 0o700 });
   fs.mkdirSync(path.join(localRoot, 'out'), { recursive: true, mode: 0o700 });
