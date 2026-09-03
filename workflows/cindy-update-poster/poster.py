@@ -11,7 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pose_library import apply as apply_pose_library, enabled_assets
+from pose_library import apply as apply_pose_library, eligible as eligible_poses, enabled_assets
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -51,9 +51,10 @@ def run_html(src, cfg, html_only):
         return
     html_dir = Path(HERE) / "out" / "html"
     final_dir = Path(HERE) / "out" / "posters"
+    output_prefix = "cindy-weekly" if cfg.get("period_type") == "weekly" else "cindy-daily"
     for lang in ("cn", "en"):
         html_path = html_dir / f"{cfg['day_id']}-{lang}.html"
-        out_path = final_dir / f"cindy-daily-{cfg['day_id']}-html-{lang}.png"
+        out_path = final_dir / f"{output_prefix}-{cfg['day_id']}-html-{lang}.png"
         subprocess.run([sys.executable, str(capture_script), str(html_path), str(out_path)], check=True)
         print(f"  {lang}: {out_path}")
 

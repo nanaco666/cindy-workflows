@@ -50,12 +50,19 @@ for (const item of enabled) {
   }
 }
 const chromeSource = fs.readFileSync(path.join(root, 'workflows/cindy-update-poster/capture_poster.py'), 'utf8');
-if (!chromeSource.includes('1240, 1754') || !chromeSource.includes('headless=new')) {
+if (!chromeSource.includes('WIDTH = 1240')
+  || !chromeSource.includes('full_page=True')
+  || !chromeSource.includes('set_viewport_size')
+  || !chromeSource.includes('headless=True')) {
   console.error('PACKAGE CHECK FAILED: Chrome capture contract missing');
   process.exit(1);
 }
 const htmlSource = fs.readFileSync(path.join(root, 'workflows/cindy-update-poster/html_poster.py'), 'utf8');
-if (!htmlSource.includes('WORDMARK_SHA256') || !htmlSource.includes('rgba(2,3,10,.46)')) {
+if (!htmlSource.includes('WORDMARK_SHA256')
+  || !htmlSource.includes('BACKGROUND_PACK')
+  || !htmlSource.includes('secrets.choice')
+  || !htmlSource.includes('object-position:center top')
+  || !htmlSource.includes('height:auto')) {
   console.error('PACKAGE CHECK FAILED: brand/veil contract missing');
   process.exit(1);
 }

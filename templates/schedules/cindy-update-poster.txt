@@ -1,20 +1,92 @@
-使用 $cindy-update-poster 完成【Asia/Shanghai 当天】的 Cindy 更新海报和社区文案准备工作。每次运行都是新的独立会话；不要续用历史任务会话；不要发布到任何社区或账号。
+任务名称：Cindy 每日更新海报与文案
+任务类型：recurring cron
+cron：30 18 * * *
+时区：Asia/Shanghai
+执行模型：当前 Cindy 可用的网关 GPT（填写实际 model / providerId）
+思考强度：medium
+每次运行：新开独立会话（persistentSession=false）
+工作目录：安装目标的 `.cindy/workflows/cindy-update-poster`
+preRunHook：无；`collect.py` 无法确认正式 Release、Release 区间或 GitHub 数据时 fail-closed，不产出成品
+空闲行为：`silentWhenIdle=true`；没有正式 Release 时只记录状态，不生成图片、不发文案
+通知：desktop=true，feishu=true
+公开写入：无；只在会话和工作目录交付，不自动发 X、邮件或其它社区
 
-先运行工作流目录中的 `python3 collect.py <YYYY-MM-DD>`。只看真实公开发布的正式 GitHub Release：Beta、canary、prerelease、draft 必须排除；当天没有正式 Release 时只汇报“今天无真实发版，不制作更新图和文案”并结束。当天 merged PR 只能作审计，不能冒充正式发布。
+字段映射（Scheduler 表单/API）：
 
-存在正式 Release 时：
-1. 用前一个正式 Release 到当天正式 Release 的精确提交区间，统计完整 merged PR 的 features、fixes、contributors；Release notes 只决定主题和叙事。
-2. 先总结用户能理解的功能和重要修复，编辑 `content/<day_id>.json`；保留 Release 顺序、中文场景化标题和完整英文翻译。
-3. 运行 `python3 poster.py content/<day_id>.json --html-only` 生成可编辑 HTML。
-4. 运行 `python3 poster.py content/<day_id>.json`，由本机 Chrome headless 截图中英文海报。
-5. 验证正式 Release 版本、URL、主题、完整区间统计、中文/英文分离、官方 Logo、approved pose、无截断/遮挡/乱码，并确认 PNG 为 1240×1754。
+```json
+{
+  "cronExpr": "30 18 * * *",
+  "timezone": "Asia/Shanghai",
+  "recurring": true,
+  "agentKind": "codex",
+  "model": "<gateway GPT model>",
+  "providerId": "<gateway providerId>",
+  "effort": "medium",
+  "persistentSession": false,
+  "workingDir": ".cindy/workflows/cindy-update-poster",
+  "silentWhenIdle": true,
+  "notify": {"desktop": true, "feishu": true}
+}
+```
 
-HTML 海报必须像固定品牌网站而不是 dashboard：全幅 Cindy/game key-art 背景；约 40–50% 黑色透明遮罩，文字区更深；沿用参考海报的标题、版本、导语、统计和长条更新模块位置。头部/底部品牌装饰保持稳定，包括 Cindy 字标、PATCH DOSSIER、条码/日期、红色斜线、UPDATE 标签、边框、版本号和 Release URL。模块使用编号、NEW/FIXED、平台/类型、用户影响描述、红色边缘和斜角切口；不要改成圆角卡片、平均统计组件、空模块或假指标。文字不得覆盖人物脸、眼睛、手、耳环、道具或猫。
+在用户自己的 Cindy 网关中，`model` 和 `providerId` 填当前可用值；例如已验证的本机配置可以是
+`model: codex/gpt-5.6-luna`、`providerId: xd`。不要把账号、Token 或本机绝对路径写进仓库。
 
-禁止调用 gpt-image-2、任何图片生成模型、brief.py 或 legacy Pillow 作为默认海报路径；不要生成新人物。只使用工作流包内 `assets/pose-library.json` 中 enabled 的人物资源和官方 Logo。不要联网搜索 Logo，不要保存凭证，不要自动发消息、发布或创建邮件草稿。
+这是 routine 任务，不需要跨轮 owner session 或持久化业务状态；每轮只使用安装目标 `.cindy/workflows/cindy-update-poster/`
+中的 `config.local.json`、`content/` 和 `out/`。重复安装时由安装器同步受管文件，保留本机配置；不创建第二个同目的 Scheduler。
 
-工作目录为安装器生成的 `.cindy/workflows/cindy-update-poster`。输出 HTML、PNG、content JSON 和中英文社区文案都留在这个目录。最终按以下格式汇报，某组为空则省略：
-🙋‍♀️需要回复：正式 Release、HTML 路径、PNG 路径、中英文文案，等待确认后发布。
-☑️无需处理：当天没有正式 Release 或无需交付的结论。
+任务提示词（复制到 Cindy Scheduler 的 prompt）：
 
-不要创建重复 Scheduler；安装后由操作者在 Cindy 中配置本任务：每天 18:30、Asia/Shanghai、recurring、独立会话、desktop + Feishu 通知、working directory 指向该工作流目录。模型和 provider 使用当前 Cindy 可用的网关 GPT 配置，不要在仓库中硬编码账号或凭证。
+使用 `$cindy-update-poster` 完成 Asia/Shanghai 当天的 Cindy 更新海报和中英文社区文案准备。
+每次运行都是新的独立会话；不要续用历史任务会话，不要自动发布、发消息或创建邮件草稿。
+本轮上限：只处理当天一次正式 Release；最多读取当前 Release 区间的完整 merged PR，并输出一套中英文 HTML、PNG、JSON 和文案。
+如果 GitHub、连接器、字体、Logo、背景池或截图任一关键步骤失败，停止本轮并报告失败原因，不生成半成品，不用旧结果冒充成功。
+
+一、事实口径
+
+1. 在当前工作目录运行 `python3 collect.py <YYYY-MM-DD>`。
+2. 只把真实公开的正式 GitHub Release 当作发版依据；Beta、canary、prerelease、draft 必须排除。
+3. 当天没有正式 Release 时，只汇报“今天无真实发版，不制作更新图和文案”，不要用当天 merged PR 冒充发版。
+4. 有正式 Release 时，用前一个正式 Release 到当前 Release 的精确提交区间统计完整 merged PR；features、fixes、contributors 必须来自完整区间，不能用 Release notes 的精选数量代替。
+5. 即使 Release notes 写 `fixes: 0`，只要完整区间有 fixes，就从真实 merged PR 选择若干有明确用户影响的修复，单独写进 `FIXED` 区块和中英文文案，并保留实际发布者。
+
+二、内容与文案
+
+1. 编辑 `content/<day_id>.json`：Release notes 保留在 `editorial.source_themes`，可见主题按 Release 顺序精选；功能和问题修复分组，不能生成空模块或假内容。
+2. 中文文案必须以清楚的标题开头，随后说明用户场景，列出精选功能与问题修复，最后给完整区间统计和准确 Release URL。
+3. 英文文案先读取并比较 `https://x.com/Cindy_Updates` 的近期真实内容；保持账号当前节奏，并使用以下已确认的紧凑骨架，只替换当天真实事实：
+
+   Cindy v0.1.28 is out 🚀
+
+   🧩 Plugins, reorganized
+   @ One search for tabs, windows, tasks & files
+   ↩️ Invisible Git savepoints
+   📱 HTML preview on mobile
+   🤖 Better subagents
+   💬 Full Telegram streams
+
+   17 features · 48 fixes · 24 contributors
+   https://github.com/makecindy/cindy/releases/tag/v0.1.28
+
+   实际输出保持“版本发布句 → 4–6 条短亮点 → 完整 merged-PR 统计 → Release URL”的结构；不默认加 hashtags、贡献者名单或长前言。最终任务回复必须直接贴出完整中文和英文文案，不能只给 JSON 路径。
+
+三、资源与成图
+
+1. 不调用 gpt-image-2 或任何图片生成模型制作日常背景，也不生成新人物。
+2. 背景池由 `config.local.json` 的 `background_dir` 或环境变量 `CINDY_POSTER_BACKGROUND_DIR` 指定。每次有正式 Release 时，从该目录的 `01-used-backgrounds/` 或 `02-historical-variants/` 随机选一张；排除 `00-index/` 缩略图，不固定上一天背景。中英文 HTML 共用本次选择，并在输出中打印绝对路径。
+3. 人物只使用 `assets/pose-library.json` 中 enabled 的 approved pose；官方 Logo 只使用 `assets/brand/std-white.png`，并校验 SHA-256：`7ae927c07f7334e337e8f7c9217f8133a8d009032b2f653616528173e4cc9e4b`。
+4. HTML/CSS 先成图，再由 Chrome 截图：
+   `python3 poster.py content/<day_id>.json --html-only`
+   `python3 poster.py content/<day_id>.json`
+5. 页面宽度 1240px，高度随实际文案自适应；背景 cover 必须使用顶部锚点 `object-position: center top`，确保人物头部和脸不被居中裁掉。截图使用最新 `capture_poster.py` 的 Chrome full-page 流程。
+6. 保持 Cindy 品牌外壳：细边框、角标、官方字标、PATCH DOSSIER、条码/日期、红色几何、UPDATE 标签、底部版本号和 Release URL。文字不得遮挡脸、眼睛、手、耳环、道具或猫。
+
+四、交付与验收
+
+- 交付 HTML、PNG、content JSON，以及内联的中文和英文社区文案。
+- 检查正式 Release、URL、主题顺序、完整区间统计、功能/修复分组、中英文无串语、Logo 校验、无溢出/遮挡/乱码。
+- 若截图失败，修复本地 HTML/CSS 或 Chrome 流程；不要切换到图片模型。
+- 只汇报结果，不修改其它工作流，不创建重复 Scheduler。
+
+去重与清理：以 `<day_id> + 当前 Release footer commit` 作为本轮去重键；同一键已有完整 HTML/PNG/JSON 时不要重复生成，除非用户明确要求重做。
+任务只保留安装目录中的最新本地成品，旧文件由用户按本机保留策略清理；不得删除背景源文件、配置或其它工作流数据。

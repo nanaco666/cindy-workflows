@@ -26,8 +26,8 @@ from datetime import datetime, timedelta, timezone
 HERE = os.path.dirname(os.path.abspath(__file__))
 CONTENT = os.path.join(HERE, "content")
 NAME_CACHE = os.path.join(HERE, ".authors.json")
-CLIENT_REPO = os.environ.get("CINDY_POSTER_CLIENT_REPO", "makecindy/cindy")
-SERVER_REPO = os.environ.get("CINDY_POSTER_SERVER_REPO", "xindong/cindy-server")
+CLIENT_REPO = "makecindy/cindy"
+SERVER_REPO = "xindong/cindy-server"
 CST = timezone(timedelta(hours=8))
 
 def gh(*args):

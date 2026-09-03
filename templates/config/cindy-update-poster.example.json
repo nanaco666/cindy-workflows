@@ -3,11 +3,19 @@
   "server_repo": "xindong/cindy-server",
   "timezone": "Asia/Shanghai",
   "chrome": "",
+  "background_dir": "REPLACE_WITH_LOCAL_BACKGROUND_POOL",
   "wordmark_sha256": "7ae927c07f7334e337e8f7c9217f8133a8d009032b2f653616528173e4cc9e4b",
   "schedule": {
     "name": "Cindy 每日更新海报与文案",
     "cron": "30 18 * * *",
+    "timezone": "Asia/Shanghai",
+    "agentKind": "codex",
+    "model": "REPLACE_WITH_GATEWAY_GPT_MODEL",
+    "providerId": "REPLACE_WITH_GATEWAY_PROVIDER_ID",
+    "effort": "medium",
+    "recurring": true,
     "persistentSession": false,
+    "workingDir": ".cindy/workflows/cindy-update-poster",
     "notify": {"desktop": true, "feishu": true}
   }
 }
