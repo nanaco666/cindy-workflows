@@ -18,13 +18,15 @@ const interactive = args.includes('--interactive') && !args.includes('--non-inte
 const rl = interactive ? readline.createInterface({ input: process.stdin, output: process.stdout }) : null;
 
 const workflowAliases = {
-  all: ['filo-support-replies', 'filoai-feedback-triage', 'cindy-update-poster', 'xiaohongshu-feedback-monitor'],
+  all: ['filo-support-replies', 'filoai-feedback-triage', 'cindy-update-poster', 'model-comparison-poster', 'xiaohongshu-feedback-monitor'],
   support: ['filo-support-replies'],
   'filo-support-replies': ['filo-support-replies'],
   triage: ['filoai-feedback-triage'],
   'filoai-feedback-triage': ['filoai-feedback-triage'],
   poster: ['cindy-update-poster'],
   'cindy-update-poster': ['cindy-update-poster'],
+  model: ['model-comparison-poster'],
+  'model-comparison-poster': ['model-comparison-poster'],
   xiaohongshu: ['xiaohongshu-feedback-monitor'],
   'xiaohongshu-feedback-monitor': ['xiaohongshu-feedback-monitor'],
 };
@@ -152,6 +154,22 @@ function installPoster() {
   execFileSync(process.execPath, [path.join(packageRoot, 'scripts', 'check-package.mjs')], { stdio: 'inherit' });
 }
 
+function installModelComparisonPoster() {
+  const workflow = 'model-comparison-poster';
+  const localRoot = path.join(target, '.cindy', 'workflows', workflow);
+  installSkill(workflow, true);
+  copyTree(path.join(packageRoot, 'workflows', workflow), localRoot, true);
+  const config = readJson(path.join(packageRoot, 'templates', 'config', `${workflow}.example.json`));
+  config.asset_dir = envOr('MODEL_POSTER_ASSET_DIR', config.asset_dir);
+  config.hero_image = envOr('MODEL_POSTER_HERO_IMAGE', config.hero_image);
+  config.catalog_url = envOr('MODEL_POSTER_CATALOG_URL', config.catalog_url);
+  config.chrome = envOr('CINDY_POSTER_CHROME', config.chrome);
+  writeNew(path.join(localRoot, 'config.local.json'), config);
+  fs.mkdirSync(path.join(localRoot, 'content'), { recursive: true, mode: 0o700 });
+  fs.mkdirSync(path.join(localRoot, 'out'), { recursive: true, mode: 0o700 });
+  fs.copyFileSync(path.join(packageRoot, 'templates', 'schedules', `${workflow}.txt`), path.join(localRoot, `${workflow}.txt`));
+}
+
 function installXiaohongshu() {
   const workflow = 'xiaohongshu-feedback-monitor';
   const localRoot = path.join(target, '.cindy', 'workflows', workflow);
@@ -168,13 +186,14 @@ function installXiaohongshu() {
   for (const file of [`${workflow}.txt`, `${workflow}.yaml`]) fs.copyFileSync(path.join(packageRoot, 'templates', 'schedules', file), path.join(localRoot, file));
 }
 
-if (!workflowAliases[workflowArg]) fail(`未知 workflow：${workflowArg}。可选：all、filo-support-replies、filoai-feedback-triage、cindy-update-poster、xiaohongshu-feedback-monitor`);
+if (!workflowAliases[workflowArg]) fail(`未知 workflow：${workflowArg}。可选：all、filo-support-replies、filoai-feedback-triage、cindy-update-poster、model-comparison-poster、xiaohongshu-feedback-monitor`);
 if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) fail(`目标目录不存在：${target}`);
 protectLocalData();
 const selected = workflowAliases[workflowArg];
 if (selected.includes('filo-support-replies')) await installSupport();
 if (selected.includes('filoai-feedback-triage')) await installTriage();
 if (selected.includes('cindy-update-poster')) installPoster();
+if (selected.includes('model-comparison-poster')) installModelComparisonPoster();
 if (selected.includes('xiaohongshu-feedback-monitor')) installXiaohongshu();
 runPackageChecks();
 console.log(`安装完成：${target}`);

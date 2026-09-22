@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "timezone": "Asia/Singapore",
+  "asset_dir": "",
+  "hero_image": "",
+  "source_urls": [],
+  "catalog_url": "",
+  "chrome": "",
+  "defaults": {"width": 1080, "capture_png": true, "language_outputs": ["cn", "en"]}
+}
