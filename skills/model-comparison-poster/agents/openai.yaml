@@ -1,0 +1,4 @@
+interface:
+  display_name: Model comparison poster
+  short_description: Research model facts and render bilingual comparison posters
+  default_prompt: Research the requested model family, verify facts from configured sources, and create the bilingual comparison package.

@@ -7,3 +7,5 @@
 workflows/cindy-update-poster/content/
 workflows/cindy-update-poster/out/
 workflows/cindy-update-poster/.authors.json
+workflows/model-comparison-poster/content/
+workflows/model-comparison-poster/out/

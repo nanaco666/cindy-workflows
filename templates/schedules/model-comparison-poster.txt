@@ -1,0 +1,11 @@
+使用 $model-comparison-poster 执行一次模型对比海报工作流。工作目录是安装目标的 .cindy/workflows/model-comparison-poster；先读取 config.local.json，不要使用其它机器的路径、缓存、账号或历史 facts。
+
+本轮流程：
+1. 读取用户给出的模型名称、更新点和 URL；再读取配置中的 source_urls 与可选 catalog_url。没有可验证的一手来源时停止，不编造参数、价格、速度或上下文。
+2. 从官方文档、模型卡、定价页开始核验，按 Skill 的 schema 写入 content/<slug>.json，每条重要事实保留来源 URL 和 verified/unverified 状态。
+3. 生成中文和英文标题、导语、对比表、价格信息和社媒文案；英文不得混入中文。
+4. 运行 python3 scripts/validate_facts.py content/<slug>.json --config config.local.json。
+5. 运行 python3 scripts/render.py content/<slug>.json --config config.local.json --out-dir out/<slug>，先产出 HTML；若 Chrome/Playwright 可用，再运行 scripts/capture_poster.py 生成两张 PNG。
+6. 检查事实、价格单位、表格可读性、语言隔离、溢出和资源路径。没有正式成品时只汇报阻塞原因。
+
+不要调用图片生成模型，不要发布到社交媒体，不要创建邮件草稿，不要把本机绝对路径写入 facts 或报告。
