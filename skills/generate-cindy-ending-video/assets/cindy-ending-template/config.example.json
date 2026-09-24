@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "copy": {
+    "zh": [
+      "功能价值，清晰表达",
+      "关键优势，一眼看懂",
+      "新能力已加入 Cindy"
+    ],
+    "en": [
+      "Make the value clear.",
+      "See the benefit at a glance.",
+      "Now available in Cindy."
+    ]
+  },
+  "ending": {
+    "color": "#F70121",
+    "animation": "center-wipe"
+  },
+  "timing": {
+    "summaryMs": 3500,
+    "endingMs": 2000
+  }
+}

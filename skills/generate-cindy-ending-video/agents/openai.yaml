@@ -1,0 +1,8 @@
+interface:
+  display_name: "Cindy Ending 视频生成"
+  short_description: "把功能说明生成中英片尾总结并渲染成高清视频"
+  brand_color: "#F70121"
+  default_prompt: "使用 $generate-cindy-ending-video，把这段功能说明做成中英双语片尾总结并输出高清视频。"
+
+policy:
+  allow_implicit_invocation: true

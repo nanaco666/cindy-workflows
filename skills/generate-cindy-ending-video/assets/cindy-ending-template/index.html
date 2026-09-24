@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>Cindy Summary + Ending Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div class="brand-lockup">
+          <span class="brand-mark">C</span>
+          <div>
+            <p class="eyebrow">CINDY VIDEO SYSTEM</p>
+            <h1>Summary + Ending Builder</h1>
+          </div>
+        </div>
+        <div class="format-note">
+          <span>16:9</span>
+          <span>30 FPS</span>
+          <span>ZH / EN</span>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <section class="preview-panel" aria-labelledby="preview-title">
+          <div class="panel-head preview-head">
+            <div>
+              <p class="eyebrow">LIVE PREVIEW</p>
+              <h2 id="preview-title">总结页 → Ending</h2>
+            </div>
+            <div class="preview-actions">
+              <div class="segmented" aria-label="预览语言">
+                <button type="button" class="locale-button is-active" data-preview-locale="zh">中文</button>
+                <button type="button" class="locale-button" data-preview-locale="en">EN</button>
+              </div>
+              <button type="button" class="play-button" id="play-preview">
+                <span class="play-icon" aria-hidden="true"></span>
+                <span>播放预览</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="stage-frame">
+            <div class="stage" id="stage">
+              <section class="scene summary-scene is-active" id="summary-scene" aria-label="总结页预览">
+                <div class="summary-topline">
+                  <span class="summary-kicker" id="summary-kicker">插件工作流</span>
+                  <span class="summary-series">CINDY / PLUGINS</span>
+                </div>
+                <div class="summary-rows" id="summary-rows"></div>
+                <p class="summary-footer" id="summary-footer">让 Cindy 直接把任务做完。</p>
+              </section>
+
+              <section class="scene ending-scene" id="ending-scene" aria-label="品牌 Ending 预览">
+                <div class="ending-panel">
+                  <img src="assets/brand/cindy-white.png" alt="Cindy" class="ending-logo" />
+                </div>
+                <div class="arcade-panel" aria-hidden="true">
+                  <div class="arcade-grid"></div>
+                  <div class="arcade-scanlines"></div>
+                  <div class="arcade-topline"><span>/// CINDY SYSTEM</span><span>RUN 001 / ONLINE</span></div>
+                  <div class="arcade-center">
+                    <div class="arcade-eyebrow">STAGE CLEAR</div>
+                    <div class="arcade-title" data-arcade-title>MISSION<br />COMPLETE</div>
+                    <div class="arcade-divider"><span></span><b>100%</b><span></span></div>
+                    <div class="arcade-score"><span>XP</span><strong>+9999</strong><span>TIME BONUS</span><strong>+0420</strong></div>
+                    <div class="arcade-logo-wrap"><img src="assets/brand/cindy-white.png" alt="" class="arcade-logo" /></div>
+                    <div class="arcade-prompt">PRESS START <i></i></div>
+                  </div>
+                  <div class="arcade-bottomline"><span>NO SAVE REQUIRED</span><span>© CINDY / PLAYER 01</span></div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <div class="timeline" aria-label="可调整的预览时长">
+            <div class="timeline-labels">
+            <span id="timeline-summary-label">SUMMARY · 3.5s</span>
+            <span id="timeline-ending-label">ENDING · 2s</span>
+            </div>
+            <div class="timeline-track" id="timeline-track" role="group" aria-label="调整 Summary 和 Ending 的时长比例">
+              <span class="timeline-summary"></span>
+              <span class="timeline-ending"></span>
+            <button type="button" class="timeline-divider" id="timeline-divider" role="slider" aria-label="拖动调整 Summary 和 Ending 时长" aria-valuemin="1.5" aria-valuemax="3.5" aria-valuenow="3.5" aria-valuetext="Summary 3.5 秒，Ending 2 秒" title="拖动调整时长"></button>
+              <i id="timeline-playhead"></i>
+            </div>
+            <p class="timeline-help">拖动中间分界线调整时长 · 总时长保持不变</p>
+          </div>
+        </section>
+
+        <aside class="config-panel" aria-labelledby="config-title">
+          <div class="panel-head config-head">
+            <div>
+              <p class="eyebrow">CONFIGURATION</p>
+              <h2 id="config-title">模板配置</h2>
+            </div>
+            <span class="save-state" id="save-state">已自动保存</span>
+          </div>
+
+          <section class="config-section">
+            <div class="section-title-row">
+              <div>
+                <span class="section-number">01</span>
+                <h3>总结文案</h3>
+              </div>
+              <div class="segmented small" aria-label="编辑语言">
+                <button type="button" class="edit-locale-button is-active" data-edit-locale="zh">中文</button>
+                <button type="button" class="edit-locale-button" data-edit-locale="en">EN</button>
+              </div>
+            </div>
+            <p class="section-help">最多 4 条；每条不超过 30 个字符。中英文分别保存。</p>
+            <div class="copy-list" id="copy-list"></div>
+            <button type="button" class="add-copy-button" id="add-copy">＋ 添加一条</button>
+          </section>
+
+          <section class="config-section">
+            <div class="section-title-row">
+              <div>
+                <span class="section-number">02</span>
+                <h3>Ending 页面</h3>
+              </div>
+            </div>
+
+            <label class="field-label" for="ending-color">背景颜色</label>
+            <div class="color-control">
+              <input type="color" id="ending-color" value="#F70121" />
+              <input type="text" id="ending-color-text" value="#F70121" maxlength="7" spellcheck="false" />
+            </div>
+
+            <label class="field-label" for="ending-animation">进入动画</label>
+            <select id="ending-animation">
+              <option value="center-wipe">中心揭示 · 标准</option>
+              <option value="fade-scale">淡入缩放</option>
+              <option value="slide-up">向上推入</option>
+              <option value="arcade-clear">游戏通关 · Arcade</option>
+            </select>
+            <p class="fixed-note">Logo 和品牌音效保持固定；下方时间轴可调整 Summary / Ending 时长。</p>
+          </section>
+
+          <div class="config-actions">
+            <button type="button" class="secondary-button" id="reset-config">恢复默认</button>
+            <button type="button" class="secondary-button" id="download-config">下载 JSON</button>
+          </div>
+          <div class="config-actions">
+            <button type="button" class="secondary-button" id="import-config">导入 JSON</button>
+            <button type="button" class="primary-button" id="copy-config">复制配置 JSON</button>
+          </div>
+          <p class="action-status" id="action-status" role="status" aria-live="polite"></p>
+          <input type="file" id="config-file" accept="application/json,.json" hidden />
+        </aside>
+      </div>
+    </main>
+
+    <audio id="click-sound" src="assets/audio/click.wav" preload="auto"></audio>
+    <audio id="switch-sound" src="assets/audio/switch.wav" preload="auto"></audio>
+    <audio id="arcade-sound" src="assets/audio/arcade-clear.wav" preload="auto"></audio>
+    <audio id="logo-sound" src="assets/audio/logo.wav" preload="auto"></audio>
+    <script src="app.js"></script>
+  </body>
+</html>

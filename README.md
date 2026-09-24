@@ -2,13 +2,14 @@
 
 这个仓库集中保存可协作迁移的 Cindy 工作流。每条工作流都包含自己的 Skill、脚本、模板和测试；运行态配置、连接器凭证、审计日志、SQLite 数据库和报告只保留在安装目标的 `.cindy/` 中，不进入仓库。
 
-当前包含五条工作流：
+当前包含六条工作流：
 
 - `filo-support-replies`：扫描 Gmail（包括 Spam），检查同事是否已回复、产品能力、Issue/PR 和发布版本，在原线程创建标准 Gmail 富文本回复草稿，并按本地策略决定是否自动发送。
 - `filoai-feedback-triage`：扫描 Gmail 与 Feishu，先诊断短反馈，再核对产品、代码、Issue、PR 和发布记录，创建或补充证据充分的 Bug/Feature 工单。
 - `cindy-update-poster`：生成 Cindy 日报海报与中英文文案。
 - `model-comparison-poster`：从官方模型资料和配置的目录地址核验模型能力/价格，生成中英文对比海报、HTML、PNG 和社媒文案。
 - `xiaohongshu-feedback-monitor`：通过用户自己的 Chrome Profile 只读采集小红书评论、私信和群聊，生成增量反馈报告。
+- `generate-cindy-ending-video`：把 Cindy 功能说明制作成中英文 Summary + 品牌 Ending，可拼接现有视频并输出 1920×1080 H.264/AAC MP4；字体、布局和动画直接来自随 Skill 打包的 HTML/CSS。
 
 ## Cindy 角色外观资源
 
@@ -43,9 +44,10 @@ node install.mjs --workflow filoai-feedback-triage --target /path/to/cindy-proje
 node install.mjs --workflow cindy-update-poster --target /path/to/cindy-project
 node install.mjs --workflow model-comparison-poster --target /path/to/cindy-project
 node install.mjs --workflow xiaohongshu-feedback-monitor --target /path/to/cindy-project
+node install.mjs --workflow generate-cindy-ending-video --target /path/to/cindy-project
 ```
 
-也支持别名：`support`、`triage`、`poster`、`model`、`xiaohongshu`。`--non-interactive` 会保留脱敏占位配置，方便在 CI 或批量安装中先落盘，之后再在本机补齐连接器账号、仓库和水位信息。
+也支持别名：`support`、`triage`、`poster`、`model`、`xiaohongshu`、`ending`。`--non-interactive` 会保留脱敏占位配置，方便在 CI 或批量安装中先落盘，之后再在本机补齐连接器账号、仓库和水位信息。
 
 安装后：
 
@@ -72,6 +74,7 @@ python3 /path/to/skill-creator/scripts/quick_validate.py skills/filoai-feedback-
 python3 /path/to/skill-creator/scripts/quick_validate.py skills/cindy-update-poster
 python3 /path/to/skill-creator/scripts/quick_validate.py skills/model-comparison-poster
 python3 /path/to/skill-creator/scripts/quick_validate.py skills/xiaohongshu-feedback-monitor
+python3 /path/to/skill-creator/scripts/quick_validate.py skills/generate-cindy-ending-video
 ```
 
 各工作流的纯逻辑测试都不需要连接真实服务；请按对应 Skill 目录中的测试说明运行。

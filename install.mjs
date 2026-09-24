@@ -18,7 +18,7 @@ const interactive = args.includes('--interactive') && !args.includes('--non-inte
 const rl = interactive ? readline.createInterface({ input: process.stdin, output: process.stdout }) : null;
 
 const workflowAliases = {
-  all: ['filo-support-replies', 'filoai-feedback-triage', 'cindy-update-poster', 'model-comparison-poster', 'xiaohongshu-feedback-monitor'],
+  all: ['filo-support-replies', 'filoai-feedback-triage', 'cindy-update-poster', 'model-comparison-poster', 'xiaohongshu-feedback-monitor', 'generate-cindy-ending-video'],
   support: ['filo-support-replies'],
   'filo-support-replies': ['filo-support-replies'],
   triage: ['filoai-feedback-triage'],
@@ -29,6 +29,8 @@ const workflowAliases = {
   'model-comparison-poster': ['model-comparison-poster'],
   xiaohongshu: ['xiaohongshu-feedback-monitor'],
   'xiaohongshu-feedback-monitor': ['xiaohongshu-feedback-monitor'],
+  ending: ['generate-cindy-ending-video'],
+  'generate-cindy-ending-video': ['generate-cindy-ending-video'],
 };
 
 function fail(message) { console.error(`安装失败：${message}`); process.exit(1); }
@@ -186,7 +188,14 @@ function installXiaohongshu() {
   for (const file of [`${workflow}.txt`, `${workflow}.yaml`]) fs.copyFileSync(path.join(packageRoot, 'templates', 'schedules', file), path.join(localRoot, file));
 }
 
-if (!workflowAliases[workflowArg]) fail(`未知 workflow：${workflowArg}。可选：all、filo-support-replies、filoai-feedback-triage、cindy-update-poster、model-comparison-poster、xiaohongshu-feedback-monitor`);
+function installCindyEndingVideo() {
+  const workflow = 'generate-cindy-ending-video';
+  installSkill(workflow, true);
+  console.log(`${workflow}：已安装 Skill、HTML 模板、品牌资源与视频渲染脚本。`);
+  console.log(`运行 node ${path.join(target, '.agents', 'skills', workflow, 'assets', 'cindy-ending-template', 'scripts', 'preflight.mjs')} 检查 Node、Chrome 和 FFmpeg。`);
+}
+
+if (!workflowAliases[workflowArg]) fail(`未知 workflow：${workflowArg}。可选：all、filo-support-replies、filoai-feedback-triage、cindy-update-poster、model-comparison-poster、xiaohongshu-feedback-monitor、generate-cindy-ending-video`);
 if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) fail(`目标目录不存在：${target}`);
 protectLocalData();
 const selected = workflowAliases[workflowArg];
@@ -195,6 +204,7 @@ if (selected.includes('filoai-feedback-triage')) await installTriage();
 if (selected.includes('cindy-update-poster')) installPoster();
 if (selected.includes('model-comparison-poster')) installModelComparisonPoster();
 if (selected.includes('xiaohongshu-feedback-monitor')) installXiaohongshu();
+if (selected.includes('generate-cindy-ending-video')) installCindyEndingVideo();
 runPackageChecks();
 console.log(`安装完成：${target}`);
 console.log(`已安装工作流：${selected.join('、')}`);
