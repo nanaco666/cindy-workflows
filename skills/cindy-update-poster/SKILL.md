@@ -103,7 +103,9 @@ The active manifest is `assets/pose-library.json`; only enabled entries in `asse
 Choose a stable reference with `pose_library.py` by `day_id`. Do not generate a new character for a daily
 poster. Use approved character artwork directly in the HTML and preserve face, proportions, navy bob,
 amber eyes, blue/red rim light, ivory cardigan, pale-blue dress, single silver geometric chevron earring
-on anatomical left ear, and black cat details. The active daily library uses white slouch socks and
+on anatomical right ear only (the character's own right, not screen right), with the left ear bare,
+and black cat details. Ignore conflicting earring-side placement or labels in older artwork;
+the corrected character-bible rule takes precedence. The active daily library uses white slouch socks and
 dark-brown chunky loafers.
 
 The official Cindy wordmark is a permanent local asset and must be embedded directly in HTML. The

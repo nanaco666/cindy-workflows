@@ -1,8 +1,10 @@
 # Cindy 外观锁定提示词
 
+2026-10-26 佩戴侧修正：只戴在角色自身的右耳，左耳不戴；不是画面右侧。旧参考图的佩戴侧和左右标签不覆盖此规则。
+
 ## 人物固定描述（每次生成必带）
 
-same recurring anime woman, recognizable face and short-to-medium tousled layered navy-black hair, electric-blue highlights with a few fine crimson-red accent strands, warm amber-brown eyes, light warm skin, anatomical left ear only wearing one silver earring approximately 3 cm long: one small round silver stud, one short fine silver chain, and one side-facing `>` zigzag arrow pendant, anatomical right ear completely bare, oversized cream long open-front rib-knit cardigan with visible button placket and buttons, pale blue-gray one-piece fit-and-flare dress with gathered waist and multiple layered ruffled hem, white scrunched leg warmers, glossy black low-cut thick-platform leather shoes with rounded toe and visible vamp, platform loafer / Mary Jane silhouette, no shaft, polished Japanese anime illustration, crisp linework, controlled cel shading.
+same recurring anime woman, recognizable face and short-to-medium tousled layered navy-black hair, electric-blue highlights with a few fine crimson-red accent strands, warm amber-brown eyes, light warm skin, anatomical right ear only wearing one silver earring approximately 3 cm long: one small round silver stud, one short fine silver chain, and one side-facing `>` zigzag arrow pendant, anatomical left ear completely bare, oversized cream long open-front rib-knit cardigan with visible button placket and buttons, pale blue-gray one-piece fit-and-flare dress with gathered waist and multiple layered ruffled hem, white scrunched leg warmers, glossy black low-cut thick-platform leather shoes with rounded toe and visible vamp, platform loafer / Mary Jane silhouette, no shaft, polished Japanese anime illustration, crisp linework, controlled cel shading.
 
 ## 宠物固定描述（每次带宠物必带）
 
@@ -14,7 +16,7 @@ ankle boots, combat boots, tall boots, boot shaft, sneakers, sandals, straight l
 
 ## 人物三视图
 
-Create a professional production model sheet from the attached Cindy references. Isolate the woman. Show front, anatomical left side, and back full-body orthographic views at equal scale on a plain warm-white studio background. Preserve the exact locked appearance above, especially the one-piece blue-gray dress, layered ruffle hem, cream cardigan with buttons, white scrunched leg warmers, low-cut glossy black leather shoes, and the single 3 cm silver `>` arrow earring on the anatomical left ear only. The anatomical right ear must be bare. No cat, no dramatic pose, no perspective distortion.
+Create a professional production model sheet from the attached Cindy references. Isolate the woman. Show front, anatomical right side, and back full-body orthographic views at equal scale on a plain warm-white studio background. Preserve the exact locked appearance above, especially the one-piece blue-gray dress, layered ruffle hem, cream cardigan with buttons, white scrunched leg warmers, low-cut glossy black leather shoes, and the single 3 cm silver `>` arrow earring on the anatomical right ear only. The anatomical left ear must be bare. No cat, no dramatic pose, no perspective distortion.
 
 ## 人物细节图
 
@@ -22,7 +24,7 @@ Create a production detail sheet from the attached Cindy references. Show one la
 
 ## 人物耳饰独立拆解图
 
-Standalone jewelry specification: Cindy wears one silver earring on the anatomical left ear only, total hanging length approximately 3 cm. Top to bottom: one small round silver stud, one short fine silver chain, and one single side-facing `>` angular pendant. The anatomical right ear is bare. The `>` shape is the code-geek symbol and must not become a V, diamond, triangle, hoop, or a pair. Use exact labels: LEFT EAR ONLY, 3 cm, ROUND STUD, FINE CHAIN, > PENDANT.
+Standalone jewelry specification: Cindy wears one silver earring on the anatomical right ear only, total hanging length approximately 3 cm. Top to bottom: one small round silver stud, one short fine silver chain, and one single side-facing `>` angular pendant. The anatomical left ear is bare. The `>` shape is the code-geek symbol and must not become a V, diamond, triangle, hoop, or a pair. Use exact labels: RIGHT EAR ONLY, 3 cm, ROUND STUD, FINE CHAIN, > PENDANT.
 
 ## 猫项圈与银牌独立拆解图
 
