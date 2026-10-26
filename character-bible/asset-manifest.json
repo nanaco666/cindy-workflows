@@ -1,7 +1,7 @@
 {
   "character": "Cindy",
-  "version": "person-v4-left-ear-only_pet-v3-black-red-eyes",
-  "asOf": "2026-09-03",
+  "version": "person-v5-right-ear-only_pet-v3-black-red-eyes",
+  "asOf": "2026-10-26",
   "canonical": {
     "personTurnaround": "assets/character/cindy-character-turnaround-v4-left-ear-only.png",
     "personDetails": "assets/character/cindy-character-details-v3-final.png",
@@ -25,7 +25,11 @@
     "dress": "pale blue-gray one-piece fit-and-flare dress with gathered waist and layered ruffled hem",
     "outerwear": "oversized cream rib-knit cardigan with button placket",
     "shoes": "glossy black low-cut thick-platform leather shoes, loafer/Mary Jane silhouette, no shaft",
-    "earring": "anatomical left ear only; approximately 3 cm; small round silver stud, short fine silver chain, one side-facing > pendant; anatomical right ear bare",
+    "earring": "anatomical right ear only (the character's own right, not screen right); approximately 3 cm; small round silver stud, short fine silver chain, one side-facing > pendant; anatomical left ear bare",
     "pet": "short-haired black cat, irises black on top blending to crimson red on bottom, black slit pupils, red collar, round silver tag with one horizontal 一 engraving"
+  },
+  "referenceUsage": {
+    "earringSideAuthority": "lockedDetails.earring and prompts/appearance-lock.md override earring placement and side labels in every existing person reference image.",
+    "personImageStatus": "Existing person images have not been redrawn for the 2026-10-26 right-ear correction. Retain their original asset filenames; use only for face, clothing and accessory construction, not earring side."
   }
 }

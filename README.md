@@ -17,7 +17,7 @@
 使用时：
 
 1. 先阅读 [`character-bible/README.md`](character-bible/README.md) 和 [`character-bible/prompts/appearance-lock.md`](character-bible/prompts/appearance-lock.md)。
-2. 生成人物时引用人物三视图、人物耳饰拆解图和服装参考图；Cindy 只有左耳佩戴约 3 cm 的银色 `>` 耳饰，右耳必须裸露。
+2. 生成人物时引用人物三视图、人物耳饰拆解图和服装参考图；Cindy 只有解剖学右耳（角色自身的右耳）佩戴约 3 cm 的银色 `>` 耳饰，左耳必须裸露；旧图中的佩戴侧和左右标签不作为依据，以外观锁定提示词为准。
 3. 生成猫时引用宠物三视图、猫眼近景和项圈/银牌拆解图；猫是短毛黑猫，虹膜上黑下红渐变、黑色竖瞳，红项圈和带“一”字刻痕的银牌。
 4. 角色动作、场景和镜头可以变化，但外观锁定字段不可改。
 
